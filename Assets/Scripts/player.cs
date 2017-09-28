@@ -8,12 +8,33 @@ public class player : MonoBehaviour {
 	private float horiSpeed = 0;
 	public float vertAcc;
 	private float vertSpeed = 0;
+	private bool canJump;
+
+	private int jumpTimer = 0;
 
 	void Start () {
 		
 	}
 	
 	void Update () {
+		handleMovement();
+		handleCollision();
+	}
+
+	private void OnTriggerStay() {
+		canJump = true;
+		jumpTimer = 5;
+	}
+
+	private void handleCollision() {
+	//	if(collider.)
+		jumpTimer--;
+		if (jumpTimer <= 0) {
+			canJump = false;
+		}
+	}
+
+	private void handleMovement() {
 		transform.Translate(horiSpeed, 0, 0);
 
 		if (Input.GetKey("a")) {
@@ -23,15 +44,12 @@ public class player : MonoBehaviour {
 			horiSpeed += 0.005f;
 		}
 
-
 		horiSpeed = horiSpeed * 0.95f;
-		
-
 
 		if (transform.localPosition.x < -GameManager.WIDTH / 2) {
 			transform.SetPositionAndRotation(new Vector3(GameManager.WIDTH / 2, transform.position.y, transform.position.z), Quaternion.identity);
 		}
-		if(transform.localPosition.x > +GameManager.WIDTH / 2) {
+		if (transform.localPosition.x > +GameManager.WIDTH / 2) {
 			transform.SetPositionAndRotation(new Vector3(-GameManager.WIDTH / 2, transform.position.y, transform.position.z), Quaternion.identity);
 		}
 
@@ -46,11 +64,14 @@ public class player : MonoBehaviour {
 			vertSpeed = 0;
 			transform.SetPositionAndRotation(new Vector3(transform.position.x, 0, transform.position.z), Quaternion.identity);
 		} else {
-			vertSpeed -= 0.005f;
+			vertSpeed -= 0.002f;
 		}
 	}
 
 	void jump() {
-		vertSpeed = vertAcc;
+		if (canJump) {
+			vertSpeed = vertAcc;
+			canJump = false;
+		}
 	}
 }
