@@ -21,9 +21,10 @@ public class player : MonoBehaviour {
 		handleCollision();
 	}
 
-	private void OnTriggerStay() {
+	void OnTriggerStay(Collider other) {
 		canJump = true;
 		jumpTimer = 5;
+		vertSpeed = 0;
 	}
 
 	private void handleCollision() {
